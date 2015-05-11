@@ -13,6 +13,21 @@ init(mrb_state *mrb, mrb_value klass)
 }
 
 static mrb_value
+set_experimental(mrb_state *mrb, mrb_value klass)
+{
+  mrb_bool expm;
+  mrb_get_args(mrb, "b", &expm);
+  glewExperimental = expm;
+  return klass;
+}
+
+static mrb_value
+get_experimental(mrb_state *mrb, mrb_value klass)
+{
+  return mrb_bool_value(glewExperimental);
+}
+
+static mrb_value
 is_supported(mrb_state *mrb, mrb_value klass)
 {
   char *name;
@@ -61,6 +76,8 @@ mrb_mruby_glew_gem_init(mrb_state* mrb)
 {
   struct RClass *glew_mod = mrb_define_module(mrb, "GLEW");
   mrb_define_class_method(mrb, glew_mod, "init",             init,             MRB_ARGS_NONE());
+  mrb_define_class_method(mrb, glew_mod, "experimental=",    set_experimental, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, glew_mod, "experimental",     get_experimental, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, glew_mod, "supported?",       is_supported,     MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, glew_mod, "get_extension",    get_extension,    MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, glew_mod, "get_error_string", get_error_string, MRB_ARGS_REQ(1));
